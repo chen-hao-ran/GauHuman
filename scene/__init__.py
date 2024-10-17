@@ -56,6 +56,9 @@ class Scene:
         elif 'dna_rendering' in args.source_path:
             print("assuming dna_rendering data set!")
             scene_info = sceneLoadTypeCallbacks["dna_rendering"](args.source_path, args.white_background, args.exp_name, args.eval)
+        elif 'basketball28_Camera04' in args.source_path:
+            print("Found annots.json file, assuming basketball28_Camera04 data set!")
+            scene_info = sceneLoadTypeCallbacks["blasketball28_Camera04"](args.source_path, args.white_background, args.exp_name, args.eval)
         else:
             assert False, "Could not recognize scene type!"
 

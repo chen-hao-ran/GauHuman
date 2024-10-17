@@ -1,0 +1,2 @@
+dataset="data/basketball28_Camera04/train"
+python train.py -s $dataset --eval --exp_name basketball28_Camera04/human0_96_pose_correction_lbs_offset_split_clone_merge_prune --motion_offset_flag --smpl_type smpl --actor_gender neutral --iterations 1200

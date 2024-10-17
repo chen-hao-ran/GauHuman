@@ -54,10 +54,10 @@ def get_smpl_params(dataset):
     for frame in range(96):
         for human in range(2):
             sp = {}
-            sp['poses'] = pose[frame][human].reshape(1, -1)
-            sp['shapes'] = pose[frame][human].reshape(1, -1)
-            sp['Th'] = trans[frame][human].reshape(1, -1)
-            sp['Rh'] = pose[frame][human][0:3].reshape(1, -1)
+            sp['poses'] = pose[frame][human].numpy().reshape(1, -1)
+            sp['shapes'] = shape[frame][human].numpy().reshape(1, -1)
+            sp['Th'] = trans[frame][human].numpy().reshape(1, -1)
+            sp['Rh'] = pose[frame][human][0:3].numpy().reshape(1, -1)
             np.save(f'output/smpl/{human}/smpl_params/{frame}.npy', sp)
     print(model)
 
@@ -125,13 +125,13 @@ def get_annots(dataset, output):
     for i in range(96):
         it = i + 5
         if it < 10:
-            num = "0000" + str(it)
+            num = "00000" + str(it)
         elif it < 100:
-            num = "000" + str(it)
+            num = "0000" + str(it)
         elif it < 1000:
-            num = "00" + str(it)
+            num = "000" + str(it)
         else:
-            num = "0" + str(it)
+            num = "00" + str(it)
         img = []
         sub_ims = {}
         for j in range(1):
@@ -153,6 +153,6 @@ if __name__ == '__main__':
     # data_reader(dataset)
     # get_smpl_vertices(dataset)
     # npy2txt('output/smpl/0/smpl_vertices/95.npy', 'output/95.txt')
-    get_img_from_vertices(dataset, 'output/smpl/0/smpl_vertices/0.npy')
+    # get_img_from_vertices(dataset, 'output/smpl/0/smpl_vertices/0.npy')
     # get_annots(dataset, os.path.join(dataset, 'annots.npy'))
-    # get_smpl_params(dataset)
+    get_smpl_params(dataset)
