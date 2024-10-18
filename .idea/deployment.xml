@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="root@connect.westb.seetacloud.com:28225 password" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="root@connect.westb.seetacloud.com:28225 password" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
+    <option name="confirmBeforeUploading" value="false" />
     <serverData>
       <paths name="root@connect.beijinga.seetacloud.com:32089 password">
         <serverdata>
@@ -100,7 +101,21 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="root@connect.westb.seetacloud.com:16289 password">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/root/autodl-tmp/Gauhuman" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="root@connect.westb.seetacloud.com:28225 password">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/root/autodl-tmp/Gauhuman" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@connect.westc.gpuhub.com:57930 password">
         <serverdata>
           <mappings>
             <mapping deploy="/root/autodl-tmp/Gauhuman" local="$PROJECT_DIR$" />

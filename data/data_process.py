@@ -3,6 +3,7 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 import cv2
+import open3d as o3d
 from utils.smpl_torch_batch import SMPLModel
 
 def data_reader(dataset):
@@ -40,6 +41,7 @@ def get_smpl_vertices(dataset):
             verts, joints = smpl(s, p, t)
             verts = verts.cpu().detach().numpy().reshape(-1, 3).astype(np.float32)
             np.save(f'output/smpl/{human}/smpl_vertices/{frame}.npy', verts)
+            np.savetxt(f'output/smpl/{human}/smpl_vertices/txt/{frame}.txt', verts)
     print(model)
 
 def get_smpl_params(dataset):
@@ -73,17 +75,19 @@ def get_img_from_vertices(dataset, input):
     K = intri
     R = extri[:3, :3]
     T = extri[:3, 3]
+    T[2] = 0
 
     os.makedirs('output/project_check', exist_ok=True)
     # PROJECT
     for i in range(96):
         path = os.path.join(input, f'{i}.npy')
         points = np.load(path).astype(np.float32)
+        # pcd = o3d.io.read_point_cloud(os.path.join(input, f"{i}.ply"))
+        # points = np.asarray(pcd.points).astype(np.float32)
         projected = np.dot(points, R.T) + T
-        projected = np.dot(points, K.T)
+        projected = np.dot(projected, K.T)
         projected = projected[:, :2] / projected[:, 2:]
         projected = projected.astype(np.int32)
-        print(projected)
 
         # 创建一个空白图像
         h = 1280
@@ -98,6 +102,20 @@ def get_img_from_vertices(dataset, input):
         # 显示图像
         # plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
         # plt.show()
+    pcd = o3d.io.read_point_cloud("output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/points3d.ply")
+    points = np.asarray(pcd.points).astype(np.float32)
+    print(points)
+    projected = np.dot(points, R.T) + T
+    projected = np.dot(projected, K.T)
+    projected = projected[:, :2] / projected[:, 2:]
+    projected = projected.astype(np.int32)
+    h = 1280
+    w = 940
+    image = np.zeros((h, w, 3), dtype=np.uint8)
+    for point in projected:
+        # print(point)
+        cv2.circle(image, tuple(point), 5, (0, 255, 0), -1)
+    cv2.imwrite('output/project_check/999.png', cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
 def get_annots(dataset, output):
     # 创建字典
@@ -153,11 +171,18 @@ def get_annots(dataset, output):
     data = np.load(output, allow_pickle=True).item()
     print("successfully saved annots.npy")
 
+def ply2txt(input, output):
+    pcd = o3d.io.read_point_cloud(input)
+    points = np.asarray(pcd.points).astype(np.float32)
+    np.savetxt(output, points)
+
 if __name__ == '__main__':
     dataset = 'data/basketball28_Camera04/train'
     # data_reader(dataset)
+    # get_smpl_params(dataset)
     # get_smpl_vertices(dataset)
     # npy2txt('output/smpl/0/smpl_vertices/95.npy', 'output/95.txt')
-    get_img_from_vertices(dataset, 'output/smpl/1/smpl_vertices')
+    # get_img_from_vertices(dataset, 'output/smpl/1/smpl_vertices')
     # get_annots(dataset, os.path.join(dataset, 'annots.npy'))
-    # get_smpl_params(dataset)
+    # ply2txt('output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/points3d.ply', 'output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/points3d.txt')
+    data = np.load('data/basketball28_Camera04/train/smpl_params/8.npy', allow_pickle=True).item()
