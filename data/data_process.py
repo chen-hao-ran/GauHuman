@@ -74,25 +74,30 @@ def get_img_from_vertices(dataset, input):
     R = extri[:3, :3]
     T = extri[:3, 3]
 
-    points = np.load(input).astype(np.float32)
-    projected = np.dot(points, R.T) + T
-    projected = np.dot(points, K.T)
-    projected = projected[:, :2] / projected[:, 2:]
-    projected = projected.astype(np.int32)
-    print(projected)
+    os.makedirs('output/project_check', exist_ok=True)
+    # PROJECT
+    for i in range(96):
+        path = os.path.join(input, f'{i}.npy')
+        points = np.load(path).astype(np.float32)
+        projected = np.dot(points, R.T) + T
+        projected = np.dot(points, K.T)
+        projected = projected[:, :2] / projected[:, 2:]
+        projected = projected.astype(np.int32)
+        print(projected)
 
-    # 创建一个空白图像
-    h = 1280
-    w = 940
-    image = np.zeros((h, w, 3), dtype=np.uint8)
+        # 创建一个空白图像
+        h = 1280
+        w = 940
+        image = np.zeros((h, w, 3), dtype=np.uint8)
 
-    # 绘制投影的点
-    for point in projected:
-        cv2.circle(image, tuple(point), 5, (0, 255, 0), -1)
+        # 绘制投影的点
+        for point in projected:
+            cv2.circle(image, tuple(point), 5, (0, 255, 0), -1)
+        cv2.imwrite(f'output/project_check/{i}.png', cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
-    # 显示图像
-    plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-    plt.show()
+        # 显示图像
+        # plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+        # plt.show()
 
 def get_annots(dataset, output):
     # 创建字典
@@ -153,6 +158,6 @@ if __name__ == '__main__':
     # data_reader(dataset)
     # get_smpl_vertices(dataset)
     # npy2txt('output/smpl/0/smpl_vertices/95.npy', 'output/95.txt')
-    # get_img_from_vertices(dataset, 'output/smpl/0/smpl_vertices/0.npy')
+    get_img_from_vertices(dataset, 'output/smpl/1/smpl_vertices')
     # get_annots(dataset, os.path.join(dataset, 'annots.npy'))
-    get_smpl_params(dataset)
+    # get_smpl_params(dataset)

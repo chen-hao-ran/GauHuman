@@ -878,6 +878,10 @@ def readCamerasBasketball(path, output_view, white_background, image_scaling=1.,
             bound_mask = Image.fromarray(np.array(bound_mask * 255.0, dtype=np.uint8))
 
             bkgd_mask = Image.fromarray(np.array(msk * 255.0, dtype=np.uint8)).convert('L')
+            # Check bound_mask
+            if split == 'train':
+                sava_path = os.path.join("output", "basketball28_Camera04", "human1_96_pose_correction_lbs_offset_split_clone_merge_prune", "bound_mask_check", "{}.png".format(i))
+                bound_mask.save(sava_path, format='PNG')
 
             cam_infos.append(CameraInfo(uid=idx, pose_id=pose_index, R=R, T=T, K=K, FovY=FovY, FovX=FovX, image=image,
                                         image_path=image_path, image_name=image_name, bkgd_mask=bkgd_mask,
