@@ -721,12 +721,14 @@ class GaussianModel:
 
         # transform points from the smpl space to the world space
         R_inv = torch.inverse(R)
-        world_src_pts = torch.matmul(smpl_src_pts, R_inv) + Th
+        # world_src_pts = torch.matmul(smpl_src_pts, R_inv) + Th
+        world_src_pts = smpl_src_pts + Th
 
-        transforms = torch.matmul(R, transforms)
+        # transforms = torch.matmul(R, transforms)
 
         if return_transl: 
-            translation = torch.matmul(translation, R_inv).squeeze(-1) + Th
+            # translation = torch.matmul(translation, R_inv).squeeze(-1) + Th
+            translation += Th
 
         return smpl_src_pts, world_src_pts, bweights, transforms, translation
 

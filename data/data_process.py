@@ -60,6 +60,7 @@ def get_smpl_params(dataset):
             sp['shapes'] = shape[frame][human].numpy().reshape(1, -1)
             sp['Th'] = trans[frame][human].numpy().reshape(1, -1)
             sp['Rh'] = pose[frame][human][0:3].numpy().reshape(1, -1)
+            # sp['poses'][0:3] = 0
             np.save(f'output/smpl/{human}/smpl_params/{frame}.npy', sp)
     print(model)
 
@@ -186,10 +187,10 @@ def ply2txt(dataset, input, output):
 if __name__ == '__main__':
     dataset = 'data/basketball28_Camera04/train'
     # data_reader(dataset)
-    # get_smpl_params(dataset)
-    # get_smpl_vertices(dataset)
+    get_smpl_params(dataset)
+    get_smpl_vertices(dataset)
     # npy2txt('output/smpl/0/smpl_vertices/95.npy', 'output/95.txt')
     # get_img_from_vertices(dataset, 'output/smpl/1/smpl_vertices')
     # get_annots(dataset, os.path.join(dataset, 'annots.npy'))
-    ply2txt(dataset,'output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/points3d.ply', 'output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/points3d_rot.txt')
+    # ply2txt(dataset,'output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/points3d.ply', 'output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/points3d_rot.txt')
     # data = np.load('data/basketball28_Camera04/train/smpl_params/8.npy', allow_pickle=True).item()

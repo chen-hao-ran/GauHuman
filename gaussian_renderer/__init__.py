@@ -19,7 +19,7 @@ from utils.sh_utils import eval_sh
 from scene.dataset_readers import storePly
 from utils.sh_utils import SH2RGB
 
-def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, iteration, scaling_modifier = 1.0, override_color = None, return_smpl_rot=False, transforms=None, translation=None):
+def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, scaling_modifier = 1.0, override_color = None, return_smpl_rot=False, transforms=None, translation=None):
     """
     Render the scene. 
     
@@ -78,17 +78,17 @@ def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, 
             correct_Rs = None
             means3D = torch.matmul(transforms, means3D[..., None]).squeeze(-1) + translation
 
-    points = means3D.detach().cpu().numpy().reshape(-1, 3)
-    shs = np.random.random((points.shape[0], 3)) / 255.0
-    # storePly(f'output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/check/points/{iteration}.ply', points, SH2RGB(shs) * 255)
-    projected = np.dot(points, viewpoint_camera.R.T) + viewpoint_camera.T
-    projected = np.dot(projected, viewpoint_camera.K.T)
-    projected = projected[:, :2] / projected[:, 2:]
-    projected = projected.astype(np.int32)
-    image = np.zeros((viewpoint_camera.image_height, viewpoint_camera.image_width, 3), dtype=np.uint8)
-    for point in projected:
-        cv2.circle(image, tuple(point), 5, (0, 255, 0), -1)
-    cv2.imwrite(f'output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/check/projected/{iteration}.png', cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    # points = means3D.detach().cpu().numpy().reshape(-1, 3)
+    # shs = np.random.random((points.shape[0], 3)) / 255.0
+    # # storePly(f'output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/check/points/{iteration}.ply', points, SH2RGB(shs) * 255)
+    # projected = np.dot(points, viewpoint_camera.R.T) + viewpoint_camera.T
+    # projected = np.dot(projected, viewpoint_camera.K.T)
+    # projected = projected[:, :2] / projected[:, 2:]
+    # projected = projected.astype(np.int32)
+    # image = np.zeros((viewpoint_camera.image_height, viewpoint_camera.image_width, 3), dtype=np.uint8)
+    # for point in projected:
+    #     cv2.circle(image, tuple(point), 5, (0, 255, 0), -1)
+    # cv2.imwrite(f'output/basketball28_Camera04/human0_96_pose_correction_lbs_offset_split_clone_merge_prune/check/projected/{iteration}.png', cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
     means3D = means3D.squeeze()
     means2D = screenspace_points
