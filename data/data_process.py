@@ -171,9 +171,16 @@ def get_annots(dataset, output):
     data = np.load(output, allow_pickle=True).item()
     print("successfully saved annots.npy")
 
-def ply2txt(input, output):
+def ply2txt(dataset, input, output):
+    model_path = os.path.join(dataset, 'smpl_parms.pth')
+    model = torch.load(model_path)
+    pose = model['gt_pose']
+    Rh = pose[0, 1, :3].numpy().reshape(1, 3)
+    R = cv2.Rodrigues(Rh)[0].astype(np.float32)
+
     pcd = o3d.io.read_point_cloud(input)
     points = np.asarray(pcd.points).astype(np.float32)
+    points = np.dot(points, R.T)
     np.savetxt(output, points)
 
 if __name__ == '__main__':
@@ -184,5 +191,5 @@ if __name__ == '__main__':
     # npy2txt('output/smpl/0/smpl_vertices/95.npy', 'output/95.txt')
     # get_img_from_vertices(dataset, 'output/smpl/1/smpl_vertices')
     # get_annots(dataset, os.path.join(dataset, 'annots.npy'))
-    # ply2txt('output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/points3d.ply', 'output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/points3d.txt')
-    data = np.load('data/basketball28_Camera04/train/smpl_params/8.npy', allow_pickle=True).item()
+    ply2txt(dataset,'output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/points3d.ply', 'output/basketball28_Camera04/human1_96_pose_correction_lbs_offset_split_clone_merge_prune/points3d_rot.txt')
+    # data = np.load('data/basketball28_Camera04/train/smpl_params/8.npy', allow_pickle=True).item()
